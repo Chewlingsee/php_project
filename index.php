@@ -1,9 +1,9 @@
 <?php
 // 1) DB Connection
-$servername = "localhost";
-$username   = "root";
-$password   = "Clsee2344.";
-$dbname     = "inventory_management";
+$servername = "project-rds.ccs3rsduonst.us-east-1.rds.amazonaws.com";
+$username   = "admin";
+$password   = "rdsprojectdb";
+$dbname     = "project"; 
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -133,6 +133,61 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            margin-right: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #formPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #formPopup input {
+            width: 100%;
+            margin-top: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h1>Inventory Stock</h1>
@@ -195,7 +250,7 @@ $conn->close();
     window.addEventListener('DOMContentLoaded', fetchTable);
 
     function fetchTable() {
-        fetch('?action=fetch')
+        fetch('index.php?action=fetch') 
             .then(res => res.json())
             .then(data => renderTable(data))
             .catch(err => console.error(err));
@@ -232,7 +287,7 @@ $conn->close();
             const inputId = prompt('Enter ID to edit:');
             if (!inputId) { closeForm(); return; }
 
-            fetch('?action=fetch')
+            fetch('index.php?action=fetch')
                 .then(res => res.json())
                 .then(products => {
                     const product = products.find(p => p.id == inputId);
@@ -271,7 +326,7 @@ $conn->close();
         fd.append('category', category.value);
         fd.append('price', price.value);
 
-        fetch('', { method: 'POST', body: fd })
+        fetch('index.php', { method: 'POST', body: fd })
             .then(r => r.json())
             .then(json => {
                 messageDiv.textContent = json.message;
@@ -296,7 +351,7 @@ $conn->close();
         fd.append('action', 'delete');
         fd.append('id', inputId);
 
-        fetch('', { method: 'POST', body: fd })
+        fetch('index.php', { method: 'POST', body: fd })
             .then(r => r.json())
             .then(json => {
                 alert(json.message);
